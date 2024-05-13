@@ -1,0 +1,33 @@
+html {
+  box-sizing: border-box;
+}
+
+body {
+  --uno: 'font-main bg-brand-base text-gray-100';
+}
+
+a {
+  --uno: 'text-blue-400 hover:brightness-[130%] underline underline-offset-auto underline-dotted';
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+  background: theme('colors.gray.200');
+  color: theme('colors.gray.900');
+  padding: 5px 10px;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+.router-link-active {
+  --uno: 'text-brand-action';
+}
+.router-link-exact-active {
+  --uno: 'text-brand-action brightness-[125%]';
+}
+
+.form-wrapper-width {
+  --uno: 'sm:max-w-full md:max-w-6/8 lg:max-w-5/8 xl:max-w-3/8';
+}
