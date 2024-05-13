@@ -31,6 +31,37 @@ export const useToast = createGlobalState(() => {
       }, options.timeout)
     }
   }
+  function addErrorToast(
+    msg: string,
+    options: Partial<Omit<Toast, 'msg' | 'id' | 'type'> & { timeout: number }> = {}
+  ) {
+    return addToast(msg, {
+      type: TOAST_TYPES.Error,
+      title: 'Error',
+      ...options
+    })
+  }
+  function addSuccessToast(
+    msg: string,
+    options: Partial<Omit<Toast, 'msg' | 'id' | 'type'> & { timeout: number }> = {}
+  ) {
+    return addToast(msg, {
+      type: TOAST_TYPES.Success,
+      title: 'Successful',
+      ...options
+    })
+  }
+
+  function addInfoToast(
+    msg: string,
+    options: Partial<Omit<Toast, 'msg' | 'id' | 'type'> & { timeout: number }> = {}
+  ) {
+    return addToast(msg, {
+      type: TOAST_TYPES.Info,
+      title: 'Just for Information',
+      ...options
+    })
+  }
   function deleteToast(id: string) {
     const toastIndex = toasts.value.findIndex((n) => n.id === id)
     if (toastIndex !== -1) toasts.value.splice(toastIndex, 1)
@@ -38,8 +69,13 @@ export const useToast = createGlobalState(() => {
 
   return {
     toasts,
-    addToast,
-    deleteToast
+    $toast: {
+      add: addToast,
+      remove: deleteToast,
+      success: addSuccessToast,
+      error: addErrorToast,
+      info: addInfoToast
+    }
   }
 })
 

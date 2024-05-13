@@ -4,7 +4,7 @@ import { TOAST_TYPES } from '@/types'
 import { computed } from 'vue'
 import Icon from './Icon.vue'
 
-const { deleteToast, toasts } = useToast()
+const { $toast, toasts } = useToast()
 
 type ToastOptionsType = {
   colorClasses: string
@@ -101,7 +101,7 @@ const toastsOptions = computed(() => {
                   <div class="flex flex-shrink-0">
                     <button
                       type="button"
-                      @click="() => deleteToast(toast.id)"
+                      @click="() => $toast.remove(toast.id)"
                       class="inline-flex text-gray-300 bg-transparent rounded-md hover:text-gray-500 focus:outline-none"
                     >
                       <span class="sr-only">Close</span>
