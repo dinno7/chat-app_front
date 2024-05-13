@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<IProps>(), {
 
 <template>
   <span
-    class="inline-block"
+    class="inline-block transition-colors duration-300 icon-el"
     :class="[props.name, props.color]"
     :style="{
       width: props.size + 'px',

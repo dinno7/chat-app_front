@@ -29,5 +29,5 @@ button:disabled {
 }
 
 .form-wrapper-width {
-  --uno: 'sm:max-w-full md:max-w-6/8 lg:max-w-5/8 xl:max-w-3/8';
+  --uno: 'sm:max-w-full md:max-w-6/8 lg:max-w-5/8 xl:max-w-3/8 w-full';
 }

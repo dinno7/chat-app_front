@@ -24,7 +24,7 @@ const $useFetch = createFetch({
     },
     async onFetchError(ctx) {
       ctx.error = ctx.data
-      const { setTokens, clearTokens } = useUser()
+      const { setTokens, signout } = useUser()
       const storeRefreshToken = localStorage.getItem('refreshToken') || ''
       const storeAccessToken = localStorage.getItem('accessToken') || ''
       let isRefresh = false
@@ -56,7 +56,7 @@ const $useFetch = createFetch({
             })
           }
         } else {
-          clearTokens()
+          signout()
         }
       }
 
