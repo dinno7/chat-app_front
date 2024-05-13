@@ -1,3 +1,8 @@
+<route lang="json5">
+{
+  name: 'signup'
+}
+</route>
 <script setup>
 import Button from '@/components/Button.vue'
 import FormWrapper from '@/components/Form/FormWrapper.vue'

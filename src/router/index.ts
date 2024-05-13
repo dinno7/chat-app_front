@@ -1,10 +1,8 @@
 import { useUser } from '@/composables/useUser'
-import { createRouter, createWebHistory } from 'vue-router'
-import routes from './routes'
+import { createRouter, createWebHistory } from 'vue-router/auto'
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes
+  history: createWebHistory()
 })
 router.beforeEach(async (to, from, next) => {
   if (to.meta?.auth) {

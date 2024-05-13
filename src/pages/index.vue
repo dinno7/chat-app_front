@@ -1,3 +1,9 @@
+<route lang="json5">
+{
+  name: 'home'
+}
+</route>
+
 <script setup lang="ts">
 import { useUser } from '@/composables/useUser'
 

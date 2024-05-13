@@ -1,3 +1,8 @@
+<route lang="json5">
+{
+  name: 'not_found'
+}
+</route>
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 
