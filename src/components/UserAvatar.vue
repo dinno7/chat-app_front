@@ -1,21 +1,30 @@
 <script setup lang="ts">
-import { useUser } from '@/composables/useUser'
+import { useUser } from '@/composables/useUser';
+import Avatar from './Avatar.vue';
 
-const { isAuth, currentUser, profilePicture } = useUser()
+const props = withDefaults(
+  defineProps<{
+    size?: 'sm' | 'md' | 'lg';
+  }>(),
+  {
+    size: 'sm',
+  },
+);
+
+const avatarSize = {
+  sm: 'w-10',
+  md: 'w-14',
+  lg: 'w-18',
+};
+const { isAuth, currentUser, profilePicture } = useUser();
 </script>
 
 <template>
-  <div
+  <Avatar
     v-if="isAuth"
-    class="overflow-hidden rounded-full w-9 aspect-ratio-square bg-brand-base ring-2 ring-brand-action"
+    :size="props.size"
+    :src="profilePicture"
+    :alt="currentUser?.name + ' profile image'"
     :title="currentUser?.name"
-  >
-    <img
-      :src="profilePicture"
-      :alt="currentUser?.name + ' profile image'"
-      class="object-cover w-full h-full object-c"
-    />
-  </div>
+  />
 </template>
-
-<style scoped></style>
