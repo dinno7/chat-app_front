@@ -1,7 +1,11 @@
 <script setup lang="ts">
-  import MainLayout from '@/layouts/Main.vue';
+import Toast from '@/components/Toast.vue';
 </script>
 
 <template>
-  <MainLayout />
+  <!-- <Header /> -->
+  <main class="mx-auto">
+    <RouterView />
+  </main>
+  <Toast />
 </template>
