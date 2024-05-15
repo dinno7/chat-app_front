@@ -1,0 +1,4 @@
+{
+  "*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts}": "npm run lint",
+  "*": "npm run format"
+}
