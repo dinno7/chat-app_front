@@ -17,7 +17,7 @@ button {
   color: theme('colors.gray.900');
   padding: 5px 10px;
 }
-button:disabled {
+*:disabled {
   cursor: not-allowed;
 }
 
@@ -30,4 +30,16 @@ button:disabled {
 
 .form-wrapper-width {
   --uno: 'sm:max-w-full md:max-w-6/8 lg:max-w-5/8 xl:max-w-3/8 w-full';
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  --uno: 'bg-brand-base/50';
+}
+
+*::-webkit-scrollbar-thumb {
+  --uno: 'bg-brand-primary/40 rounded';
 }
