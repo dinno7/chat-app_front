@@ -1,23 +1,25 @@
 <script setup lang="ts">
-interface IProps {
-  lable?: string
-}
-const props = defineProps<IProps>()
-const model = defineModel()
-defineOptions({
-  inheritAttrs: false
-})
+import { generateRandUnique } from '@/utils';
 
-const labelId = Math.random().toString(16).slice(2)
+interface IProps {
+  label?: string;
+}
+const props = defineProps<IProps>();
+const model = defineModel();
+defineOptions({
+  inheritAttrs: false,
+});
+
+const labelId = generateRandUnique();
 </script>
 
 <template>
   <div class="w-full">
-    <label v-if="props.lable" class="block pb-3" :for="labelId">
-      {{ props.lable }}
+    <label v-if="props.label" class="block pb-3 font-bold" :for="labelId">
+      {{ props.label }}
     </label>
     <input
-      class="focus:(border-2 text-brand-base border-solid border-brand-action outline-none bg-brand-primary/80 placeholder-gray-500) text-brand-primary backdrop-blur rounded px-3 py-2 w-full block caret-brand-base bg-brand-primary/30 backdrop-blur-lg text-brand-base"
+      class="block w-full rounded bg-brand-primary/30 px-3 py-2 text-brand-primary caret-brand-base backdrop-blur focus:(border-2 border-brand-action border-solid bg-brand-primary/80 text-brand-base outline-none placeholder-gray-500)"
       :id="labelId"
       v-bind="$attrs"
       v-model="model"

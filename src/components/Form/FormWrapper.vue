@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import Icon from '@/components/Icon.vue'
+import Icon from '@/components/Icon.vue';
 const props = defineProps<{
-  icon?: string
-  title?: string
-}>()
+  icon?: string;
+  title?: string;
+}>();
 </script>
 
 <template>
   <div
-    class="flex flex-col items-center justify-center px-5 py-10 mx-auto rounded-lg bg-brand-primary/10 backdrop-blur-md"
+    class="mx-auto flex flex-col items-center justify-center rounded-lg bg-brand-base px-5 py-10"
   >
     <div
       v-if="props.icon"
-      class="flex items-center justify-center w-24 rounded-full aspect-ratio-square bg-brand-primary/10"
+      class="aspect-ratio-square w-24 flex items-center justify-center rounded-full bg-brand-primary/10"
     >
       <Icon :name="props.icon" color="text-brand-action" size="75" />
     </div>
@@ -20,6 +20,8 @@ const props = defineProps<{
       {{ props.title }}
     </p>
 
-    <slot> Your form... </slot>
+    <div class="w-full">
+      <slot> Your form... </slot>
+    </div>
   </div>
 </template>

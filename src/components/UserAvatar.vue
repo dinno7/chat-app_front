@@ -11,11 +11,6 @@ const props = withDefaults(
   },
 );
 
-const avatarSize = {
-  sm: 'w-10',
-  md: 'w-14',
-  lg: 'w-18',
-};
 const { isAuth, currentUser, profilePicture } = useUser();
 </script>
 

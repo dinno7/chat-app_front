@@ -1,89 +1,91 @@
-import { getUserFromApi } from '@/api/user'
+import { getUserFromApi } from '@/api/user';
 import {
   type BasePayload,
   type SignAuthPayload,
   type SignInData,
   type SignUpData,
-  type User
-} from '@/types'
-import { createGlobalState, tryOnBeforeMount } from '@vueuse/core'
-import { computed, ref } from 'vue'
-import $useFetch from './$useFetch'
+  type User,
+} from '@/types';
+import { createGlobalState, tryOnBeforeMount } from '@vueuse/core';
+import { computed, ref } from 'vue';
+import $useFetch from './$useFetch';
 
 export const useUser = createGlobalState(() => {
-  const currentUser = ref<User | null>(null)
-  const isAuth = computed<boolean>(() => !!currentUser.value?.email)
-  const profilePicture = computed<string>(
-    () => `${import.meta.env.VITE_SERVER_URL}${currentUser.value?.profilePicture}`
-  )
-  const fetching = ref(false)
+  const currentUser = ref<User | null>(null);
+  const isAuth = computed<boolean>(() => !!currentUser.value?.email);
+  const profilePicture = computed<string>(() =>
+    currentUser.value?.profilePicture.startsWith('https://')
+      ? currentUser.value.profilePicture
+      : `${import.meta.env.VITE_SERVER_URL}${currentUser.value?.profilePicture}`,
+  );
+  const fetching = ref(false);
 
-  tryOnBeforeMount(fetchUser)
+  tryOnBeforeMount(fetchUser);
   function setUser(newUser: User | null) {
-    currentUser.value = newUser
+    currentUser.value = newUser;
   }
 
   async function signIn(signInData: SignInData) {
-    fetching.value = true
+    fetching.value = true;
     const { data, error } = await $useFetch('auth/signin')
       .post(signInData)
-      .json<BasePayload<SignAuthPayload>>()
-    fetching.value = false
+      .json<BasePayload<SignAuthPayload>>();
+    fetching.value = false;
     if (error.value || !data.value?.ok)
-      throw new Error(error.value?.message || 'Some problem happened in signing in')
+      throw new Error(error.value?.message || 'Some problem happened in signing in');
 
-    const { data: tokens } = data.value
-    setTokens(tokens)
+    const { data: tokens } = data.value;
+    setTokens(tokens);
 
-    await fetchUser()
+    await fetchUser();
 
-    return currentUser
+    return currentUser;
   }
 
   async function signUp(signUpData: SignUpData) {
-    fetching.value = true
+    fetching.value = true;
     const { data, error } = await $useFetch('auth/signup')
       .post(signUpData)
-      .json<BasePayload<SignAuthPayload>>()
-    fetching.value = false
+      .json<BasePayload<SignAuthPayload>>();
+    fetching.value = false;
     if (error.value || !data.value?.ok)
-      throw new Error(error.value?.message || 'Some problem happend in signing up')
+      throw new Error(error.value?.message || 'Some problem happend in signing up');
 
-    const { data: tokens } = data.value
-    setTokens(tokens)
+    const { data: tokens } = data.value;
+    setTokens(tokens);
 
-    await fetchUser()
+    await fetchUser();
 
-    return currentUser
+    return currentUser;
   }
 
   async function signout() {
     await $useFetch('auth/signout')
       .post({
-        refreshToken: localStorage.getItem('refreshToken') || ''
+        refreshToken: localStorage.getItem('refreshToken') || '',
       })
-      .json()
+      .json();
 
-    setUser(null)
-    clearTokens()
+    setUser(null);
+    clearTokens();
   }
 
   async function fetchUser() {
-    fetching.value = true
-    const fetchedUser = await getUserFromApi()
-    setUser(fetchedUser)
-    fetching.value = false
-    return currentUser.value
+    fetching.value = true;
+    const fetchedUser = await getUserFromApi();
+    setUser(fetchedUser);
+    fetching.value = false;
+    return currentUser.value;
   }
 
   function setTokens({ accessToken, refreshToken }: SignAuthPayload) {
-    localStorage.setItem('accessToken', accessToken)
-    localStorage.setItem('refreshToken', refreshToken)
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
   }
 
   function clearTokens() {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
   }
 
   return {
@@ -97,6 +99,6 @@ export const useUser = createGlobalState(() => {
     signUp,
     setTokens,
     clearTokens,
-    fetchUser
-  }
-})
+    fetchUser,
+  };
+});
