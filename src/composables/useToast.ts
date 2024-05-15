@@ -1,70 +1,70 @@
-import { TOAST_TYPES, type Toast } from '@/types'
-import { generateRandUnique } from '@/utils'
-import { createGlobalState } from '@vueuse/core'
-import { ref } from 'vue'
+import { TOAST_TYPES, type Toast } from '@/types';
+import { generateRandUnique } from '@/utils';
+import { createGlobalState } from '@vueuse/core';
+import { ref } from 'vue';
 
 export const useToast = createGlobalState(() => {
-  const toasts = ref<Toast[]>([])
+  const toasts = ref<Toast[]>([]);
 
   function addToast(
     msg: string,
-    options: Partial<Omit<Toast, 'msg' | 'id'> & { timeout: number }> = {}
+    options: Partial<Omit<Toast, 'msg' | 'id'> & { timeout: number }> = {},
   ) {
-    const id = generateRandUnique(7)
-    options.position ||= 'top-right'
-    options.type ||= TOAST_TYPES.Info
-    options.title ||= ''
-    options.timeout ??= 0
+    const id = generateRandUnique(7);
+    options.position ||= 'top-right';
+    options.type ||= TOAST_TYPES.Info;
+    options.title ||= '';
+    options.timeout ??= 0;
 
     const newToast: Toast = {
       id,
       msg,
       type: options.type,
       title: options.title,
-      position: options.position
-    }
-    toasts.value.push(newToast)
+      position: options.position,
+    };
+    toasts.value.push(newToast);
 
     if (options.timeout) {
       setTimeout(() => {
-        deleteToast(id)
-      }, options.timeout)
+        deleteToast(id);
+      }, options.timeout);
     }
   }
   function addErrorToast(
     msg: string,
-    options: Partial<Omit<Toast, 'msg' | 'id' | 'type'> & { timeout: number }> = {}
+    options: Partial<Omit<Toast, 'msg' | 'id' | 'type'> & { timeout: number }> = {},
   ) {
     return addToast(msg, {
       type: TOAST_TYPES.Error,
       title: 'Error',
-      ...options
-    })
+      ...options,
+    });
   }
   function addSuccessToast(
     msg: string,
-    options: Partial<Omit<Toast, 'msg' | 'id' | 'type'> & { timeout: number }> = {}
+    options: Partial<Omit<Toast, 'msg' | 'id' | 'type'> & { timeout: number }> = {},
   ) {
     return addToast(msg, {
       type: TOAST_TYPES.Success,
       title: 'Successful',
-      ...options
-    })
+      ...options,
+    });
   }
 
   function addInfoToast(
     msg: string,
-    options: Partial<Omit<Toast, 'msg' | 'id' | 'type'> & { timeout: number }> = {}
+    options: Partial<Omit<Toast, 'msg' | 'id' | 'type'> & { timeout: number }> = {},
   ) {
     return addToast(msg, {
       type: TOAST_TYPES.Info,
       title: 'Just for Information',
-      ...options
-    })
+      ...options,
+    });
   }
   function deleteToast(id: string) {
-    const toastIndex = toasts.value.findIndex((n) => n.id === id)
-    if (toastIndex !== -1) toasts.value.splice(toastIndex, 1)
+    const toastIndex = toasts.value.findIndex((n) => n.id === id);
+    if (toastIndex !== -1) toasts.value.splice(toastIndex, 1);
   }
 
   return {
@@ -74,10 +74,10 @@ export const useToast = createGlobalState(() => {
       remove: deleteToast,
       success: addSuccessToast,
       error: addErrorToast,
-      info: addInfoToast
-    }
-  }
-})
+      info: addInfoToast,
+    },
+  };
+});
 
 // > If do not use VueUse:
 // const toasts = ref<Toast[]>([])

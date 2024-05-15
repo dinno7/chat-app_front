@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { useUser } from '@/composables/useUser'
-import { navlinks } from '@/constants'
-import { RouterLink } from 'vue-router'
+import { useUser } from '@/composables/useUser';
+import { navlinks } from '@/constants';
+import { RouterLink } from 'vue-router';
 
-const { isAuth, signout } = useUser()
+const { isAuth, signout } = useUser();
 </script>
 
 <template>
   <nav>
-    <ul class="flex items-center gap-5 list-none">
+    <ul class="flex list-none items-center gap-5">
       <li v-for="(link, index) in navlinks" :key="index">
         <RouterLink :to="link.path">
           {{ link.name }}

@@ -1,7 +1,7 @@
-import { createFetch } from '@vueuse/core'
-import { useUser } from './useUser'
+import { createFetch } from '@vueuse/core';
+import { useUser } from './useUser';
 
-let requestOptions: RequestInit = {}
+let requestOptions: RequestInit = {};
 const $useFetch = createFetch({
   baseUrl: `${import.meta.env.VITE_SERVER_URL}/api`,
   combination: 'chain',
@@ -10,61 +10,61 @@ const $useFetch = createFetch({
     timeout: 10000,
     updateDataOnError: true,
     beforeFetch(ctx) {
-      ctx.options
-      const accessToken = localStorage.getItem('accessToken') || ''
+      ctx.options;
+      const accessToken = localStorage.getItem('accessToken') || '';
       if (accessToken) {
         ctx.options.headers = {
           ...ctx.options.headers,
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+        };
       }
 
-      requestOptions = ctx.options
-      return ctx
+      requestOptions = ctx.options;
+      return ctx;
     },
     async onFetchError(ctx) {
-      ctx.error = ctx.data
-      const { setTokens, signout } = useUser()
-      const storeRefreshToken = localStorage.getItem('refreshToken') || ''
-      const storeAccessToken = localStorage.getItem('accessToken') || ''
-      let isRefresh = false
+      ctx.error = ctx.data;
+      const { setTokens, signout } = useUser();
+      const storeRefreshToken = localStorage.getItem('refreshToken') || '';
+      const storeAccessToken = localStorage.getItem('accessToken') || '';
+      let isRefresh = false;
       if (ctx.response?.status === 401 && storeRefreshToken && !isRefresh) {
-        isRefresh = true
+        isRefresh = true;
 
         const getTokens = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/auth/refresh`, {
           method: 'POST',
           body: JSON.stringify({
-            refreshToken: storeRefreshToken
+            refreshToken: storeRefreshToken,
           }),
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${storeAccessToken}`
-          }
-        })
+            Authorization: `Bearer ${storeAccessToken}`,
+          },
+        });
 
-        const newTokens = await getTokens.json()
+        const newTokens = await getTokens.json();
 
         if (newTokens?.ok) {
-          setTokens(newTokens.data)
+          setTokens(newTokens.data);
 
           if (ctx.response?.url) {
             await fetch(ctx.response.url, {
               ...requestOptions,
               headers: {
-                Authorization: `Bearer ${newTokens?.data?.accessToken || ''}`
-              }
-            })
+                Authorization: `Bearer ${newTokens?.data?.accessToken || ''}`,
+              },
+            });
           }
         } else {
-          signout()
+          signout();
         }
       }
 
-      isRefresh = false
+      isRefresh = false;
 
-      return ctx
-    }
-  }
-})
+      return ctx;
+    },
+  },
+});
 
-export default $useFetch
+export default $useFetch;
