@@ -4,14 +4,14 @@ import {
   presetUno,
   presetWebFonts,
   transformerDirectives,
-  transformerVariantGroup
-} from 'unocss'
+  transformerVariantGroup,
+} from 'unocss';
 
 export default defineConfig({
   // ...UnoCSS options
   presets: [
     presetUno({
-      dark: 'class'
+      dark: 'class',
     }),
     presetIcons(),
     presetWebFonts({
@@ -19,13 +19,13 @@ export default defineConfig({
       fonts: {
         // these will extend the default theme
         main: {
-          name: 'Inter',
+          name: 'DM Sans',
           italic: true,
-          weights: ['400', '600', '900']
+          weights: ['400', '600', '900'],
         },
-        hand: ['Grechen Fuemen']
-      }
-    })
+        hand: ['Kaushan Script'],
+      },
+    }),
   ],
   transformers: [transformerDirectives(), transformerVariantGroup()],
   theme: {
@@ -33,8 +33,20 @@ export default defineConfig({
       brand: {
         base: '#0D1117',
         primary: '#E5E7EB',
-        action: '#F26B43'
-      }
-    }
-  }
-})
+        action: {
+          DEFAULT: '#F47743',
+          100: '#ffedd5',
+          200: '#fed7aa',
+          300: '#fdba74',
+          400: '#fb923c',
+          500: '#f97316',
+          600: '#ea580c',
+          700: '#c2410c',
+          800: '#9a3412',
+          900: '#7c2d12',
+          950: '#431407',
+        },
+      },
+    },
+  },
+});
