@@ -24,7 +24,7 @@ const avatarSize = {
 <template>
   <div
     v-if="props.src"
-    class="overflow-hidden rounded-50% bg-brand-base ring-2 ring-brand-action"
+    class="overflow-hidden rounded-50% bg-brand-base ring-2 ring-brand-action/30"
     :class="[avatarSize[props.size]]"
     :title="props.title"
   >

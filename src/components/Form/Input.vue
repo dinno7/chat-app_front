@@ -15,7 +15,7 @@ const labelId = generateRandUnique();
 
 <template>
   <div class="w-full">
-    <label v-if="props.label" class="block pb-3 font-bold" :for="labelId">
+    <label v-if="props.label" class="block pb-3 font-semibold" :for="labelId">
       {{ props.label }}
     </label>
     <input

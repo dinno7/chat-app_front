@@ -3,8 +3,8 @@ import Icon from '@/components/Icon.vue';
 import { onKeyStroke, useConfirmDialog } from '@vueuse/core';
 
 interface IProps {
-  position: 'center' | 'top';
-  closeOnOutside: boolean;
+  position?: 'center' | 'top';
+  closeOnOutside?: boolean;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -58,7 +58,7 @@ defineExpose({
       <div
         v-if="isRevealed"
         @click="props.closeOnOutside && cancel()"
-        class="modal-wrapper fixed inset-0 z-5 animate-fade-in animate-duration-150 bg-brand-primary/10 p-10 backdrop-blur-4"
+        class="modal-wrapper fixed inset-0 z-5 animate-fade-in animate-duration-150 bg-brand-primary/3 p-10 backdrop-blur-md"
       ></div>
     </Transition>
 
@@ -81,10 +81,10 @@ defineExpose({
     >
       <div
         v-if="isRevealed"
-        class="form-wrapper-width modal-contents fixed z-10 flex animate-zoom-in animate-duration-200 content-center items-center justify-center px-5"
+        class="modal-contents fixed z-10 w-max flex animate-zoom-in animate-duration-200 content-center items-center justify-center px-5"
         :class="[positionClasses[props.position]]"
       >
-        <slot :cancel="cancel" :confirm="confirm" :reveal="reveal" />
+        <slot :isRevealed="isRevealed" :cancel="cancel" :confirm="confirm" :reveal="reveal" />
       </div>
     </Transition>
   </teleport>

@@ -8,7 +8,9 @@ router.beforeEach(async (to, from, next) => {
   if (to.meta?.auth) {
     const { currentUser, fetchUser } = useUser();
     const user = currentUser.value ? currentUser.value : await fetchUser();
-    if (!user) return next({ force: true, replace: true, name: 'signin' });
+    if (!user) {
+      return next({ force: true, replace: true, name: 'signin' });
+    }
   }
   return next();
 });

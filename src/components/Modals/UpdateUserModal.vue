@@ -61,7 +61,12 @@ const handleUploadNewProfilePicture = async () => {
 </script>
 
 <template>
-  <FormWrapper v-if="currentUser" title="User info" icon="i-eva:person-outline" class="w-full">
+  <FormWrapper
+    v-if="currentUser"
+    title="User info"
+    icon="i-eva:person-outline"
+    class="modal-content-width"
+  >
     <form @submit.prevent="updateUserDetails" class="space-y-8" @input="isFormChanged = true">
       <FormInput
         label="Name"
