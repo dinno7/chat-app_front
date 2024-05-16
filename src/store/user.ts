@@ -1,24 +1,17 @@
-import {
-  type BasePayload,
-  type SignAuthPayload,
-  type SignInData,
-  type SignUpData,
-  type User,
-} from '@/types';
+import $useFetch from '@/composables/$useFetch';
+import type { BasePayload, SignAuthPayload, SignInData, SignUpData, User } from '@/types';
 import { normalizeImageUrl } from '@/utils';
-import { createGlobalState, tryOnBeforeMount } from '@vueuse/core';
+import { tryOnBeforeMount } from '@vueuse/core';
+import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import $useFetch from './$useFetch';
 
-export const useUser = createGlobalState((isFetchBeforeMount: boolean = false) => {
+export const useUserStore = defineStore('user', () => {
   const currentUser = ref<User | null>(null);
   const isAuth = computed<boolean>(() => !!currentUser.value?.email);
   const profilePicture = computed<string>(() =>
     normalizeImageUrl(currentUser.value?.profilePicture),
   );
   const fetching = ref(false);
-
-  if (isFetchBeforeMount) fetchBeforeMount();
 
   function fetchBeforeMount() {
     return tryOnBeforeMount(fetchUser);
@@ -52,7 +45,7 @@ export const useUser = createGlobalState((isFetchBeforeMount: boolean = false) =
       .json<BasePayload<SignAuthPayload>>();
     fetching.value = false;
     if (error.value || !data.value?.ok)
-      throw new Error(error.value?.message || 'Some problem happend in signing up');
+      throw new Error(error.value?.message || 'Some problem happened in signing up');
 
     const { data: tokens } = data.value;
     setTokens(tokens);

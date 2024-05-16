@@ -9,7 +9,7 @@ import FormWrapper from '@/components/Form/FormWrapper.vue';
 import FormInput from '@/components/Form/Input.vue';
 import FullPageCenterWrapper from '@/components/FullPageCenterWrapper.vue';
 import { useToast } from '@/composables/useToast';
-import { useUser } from '@/composables/useUser';
+import { useUserStore } from '@/store/user';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -20,7 +20,8 @@ const signInData = reactive({
   password: '',
 });
 const sendingData = ref(false);
-const { signIn } = useUser();
+
+const { signIn } = useUserStore();
 
 const submitToSignIn = async () => {
   try {

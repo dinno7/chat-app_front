@@ -9,7 +9,7 @@ import FormWrapper from '@/components/Form/FormWrapper.vue';
 import FormInput from '@/components/Form/Input.vue';
 import FullPageCenterWrapper from '@/components/FullPageCenterWrapper.vue';
 import { useToast } from '@/composables/useToast';
-import { useUser } from '@/composables/useUser';
+import { useUserStore } from '@/store/user';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -21,7 +21,9 @@ const signUpData = reactive({
 });
 
 const { $toast } = useToast();
-const { signUp } = useUser();
+
+const { signUp } = useUserStore();
+
 const router = useRouter();
 
 const sendingData = ref(false);

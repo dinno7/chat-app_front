@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useUser } from '@/composables/useUser';
+import { useUserStore } from '@/store/user';
+import { storeToRefs } from 'pinia';
 import Avatar from './Avatar.vue';
 
 const props = withDefaults(
@@ -11,7 +12,8 @@ const props = withDefaults(
   },
 );
 
-const { isAuth, currentUser, profilePicture } = useUser();
+const userStore = useUserStore();
+const { currentUser, isAuth, profilePicture } = storeToRefs(userStore);
 </script>
 
 <template>

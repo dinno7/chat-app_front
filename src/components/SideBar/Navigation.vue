@@ -4,12 +4,13 @@ import Modal from '@/components/Modal.vue';
 import FindUsersModal from '@/components/Modals/FindUsersModal.vue';
 import UpdateUserModal from '@/components/Modals/UpdateUserModal.vue';
 import UserAvatar from '@/components/UserAvatar.vue';
-import { useUser } from '@/composables/useUser';
+import { useUserStore } from '@/store/user';
 import { ref } from 'vue';
 
 const updateUserModal = ref<InstanceType<typeof Modal> | null>(null);
 const findUsersModal = ref<InstanceType<typeof Modal> | null>(null);
-const { signout } = useUser();
+
+const userStore = useUserStore();
 </script>
 
 <template>
@@ -25,7 +26,7 @@ const { signout } = useUser();
     <div class="bottom-icons">
       <UserAvatar class="mx-auto mb-5 block cursor-pointer" @click="updateUserModal?.reveal" />
 
-      <div class="icon-wrapper" title="Exit" @click="signout">
+      <div class="icon-wrapper" title="Exit" @click="userStore.signout">
         <Icon name="i-eva:external-link-outline" size="28" />
       </div>
     </div>

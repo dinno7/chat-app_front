@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import Logo from '@/components/Logo.vue';
 import NavLinks from '@/components/NavLinks.vue';
-import { useUser } from '@/composables/useUser';
+import { useUserStore } from '@/store/user';
 import UserAvatar from './UserAvatar.vue';
-const { currentUser, isAuth } = useUser();
+
+const userStore = useUserStore();
 </script>
 
 <template>
   <header class="flex items-center justify-between border-b-2 px-20 py-3">
-    <div v-if="isAuth" class="flex items-center justify-start gap-4">
+    <div v-if="userStore.isAuth" class="flex items-center justify-start gap-4">
       <UserAvatar />
-      <span class="text-lg font-bold">{{ currentUser?.name }}</span>
+      <span class="text-lg font-bold">{{ userStore.currentUser?.name }}</span>
     </div>
     <div class="flex items-center justify-center">
       <Logo size="70" />

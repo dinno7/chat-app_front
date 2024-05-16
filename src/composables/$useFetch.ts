@@ -1,5 +1,5 @@
+import { useUserStore } from '@/store/user';
 import { createFetch } from '@vueuse/core';
-import { useUser } from './useUser';
 
 let requestOptions: RequestInit = {};
 let isRefresh = false;
@@ -23,11 +23,12 @@ const $useFetch = createFetch({
       return ctx;
     },
     async onFetchError(ctx) {
+      const storeRefreshToken = localStorage.getItem('refreshToken') || '';
+      const storeAccessToken = localStorage.getItem('accessToken') || '';
       if (ctx.response?.status === 401 && !isRefresh) {
-        const storeRefreshToken = localStorage.getItem('refreshToken') || '';
-        const storeAccessToken = localStorage.getItem('accessToken') || '';
         isRefresh = true;
-        const { signout, setTokens } = useUser();
+        const { setTokens, signout } = useUserStore();
+
         try {
           const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/auth/refresh`, {
             referrer: 'on_fetch_error_401',

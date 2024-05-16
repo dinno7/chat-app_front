@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useUser } from '@/composables/useUser';
 import { navlinks } from '@/constants';
+import { useUserStore } from '@/store/user';
 import { RouterLink } from 'vue-router';
 
-const { isAuth, signout } = useUser();
+const userStore = useUserStore();
 </script>
 
 <template>
@@ -14,7 +14,7 @@ const { isAuth, signout } = useUser();
           {{ link.name }}
         </RouterLink>
       </li>
-      <template v-if="!isAuth">
+      <template v-if="!userStore.isAuth">
         <li>
           <RouterLink :to="{ name: 'signin' }"> Sign in </RouterLink>
         </li>
@@ -22,8 +22,8 @@ const { isAuth, signout } = useUser();
           <RouterLink :to="{ name: 'signup' }"> Sign up </RouterLink>
         </li>
       </template>
-      <li v-if="isAuth">
-        <a href="javascript:void(0)" @click.prevent="signout"> SignOut </a>
+      <li v-if="userStore.isAuth">
+        <a href="javascript:void(0)" @click.prevent="userStore.signout"> SignOut </a>
       </li>
     </ul>
   </nav>

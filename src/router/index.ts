@@ -1,4 +1,4 @@
-import { useUser } from '@/composables/useUser';
+import { useUserStore } from '@/store/user';
 import { createRouter, createWebHistory } from 'vue-router/auto';
 
 const router = createRouter({
@@ -6,8 +6,9 @@ const router = createRouter({
 });
 router.beforeEach(async (to, from, next) => {
   if (to.meta?.auth) {
-    const { currentUser, fetchUser } = useUser();
-    const user = currentUser.value ? currentUser.value : await fetchUser();
+    const userStore = useUserStore();
+
+    const user = userStore.currentUser ? userStore.currentUser : await userStore.fetchUser();
     if (!user) {
       return next({ force: true, replace: true, name: 'signin' });
     }

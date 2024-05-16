@@ -4,13 +4,14 @@ import FormWrapper from '@/components/Form/FormWrapper.vue';
 import FormInput from '@/components/Form/Input.vue';
 import $useFetch from '@/composables/$useFetch';
 import { useToast } from '@/composables/useToast';
-import { useUser } from '@/composables/useUser';
+import { useUserStore } from '@/store/user';
 import type { BasePayload, User } from '@/types';
 import { reactive, ref } from 'vue';
 import Button from '../Button.vue';
 import FileUploader from '../Form/FileUploader.vue';
 
-const { currentUser, profilePicture, setUser } = useUser();
+const userStore = useUserStore();
+
 const isFormChanged = ref(false);
 const { $toast } = useToast();
 
@@ -26,8 +27,8 @@ const props = defineProps({
 });
 
 const updatedFields = reactive({
-  name: currentUser.value?.name || '',
-  profilePicture: currentUser.value?.profilePicture || '',
+  name: userStore.currentUser?.name || '',
+  profilePicture: userStore.currentUser?.profilePicture || '',
 });
 
 const isUpdating = ref(false);
@@ -48,7 +49,7 @@ const updateUserDetails = async () => {
 
   if (data.value?.data?.email) {
     $toast.success('Your details were updated successfully', { timeout: 5000 });
-    setUser(data.value.data as User);
+    userStore.setUser(data.value.data as User);
     return props.confirmFn();
   }
 };
@@ -62,7 +63,7 @@ const handleUploadNewProfilePicture = async () => {
 
 <template>
   <FormWrapper
-    v-if="currentUser"
+    v-if="userStore.currentUser"
     title="User info"
     icon="i-eva:person-outline"
     class="modal-content-width"
@@ -75,11 +76,11 @@ const handleUploadNewProfilePicture = async () => {
         placeholder="Enter your name"
         v-model="updatedFields.name"
       />
-      <AlwaysDisableInput label="Email"> {{ currentUser.email }} </AlwaysDisableInput>
+      <AlwaysDisableInput label="Email"> {{ userStore.currentUser?.email }} </AlwaysDisableInput>
       <FileUploader
         name="profilePicture"
         id="profilePicture"
-        :defaultSrc="profilePicture"
+        :defaultSrc="userStore.profilePicture"
         @change="handleUploadNewProfilePicture"
         accept="image/png,image/jpeg,image/jpg,image/svg"
       />
