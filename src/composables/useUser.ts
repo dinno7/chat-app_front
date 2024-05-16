@@ -1,4 +1,3 @@
-import { getUserFromApi } from '@/api/user';
 import {
   type BasePayload,
   type SignAuthPayload,
@@ -6,21 +5,25 @@ import {
   type SignUpData,
   type User,
 } from '@/types';
+import { normalizeImageUrl } from '@/utils';
 import { createGlobalState, tryOnBeforeMount } from '@vueuse/core';
 import { computed, ref } from 'vue';
 import $useFetch from './$useFetch';
 
-export const useUser = createGlobalState(() => {
+export const useUser = createGlobalState((isFetchBeforeMount: boolean = false) => {
   const currentUser = ref<User | null>(null);
   const isAuth = computed<boolean>(() => !!currentUser.value?.email);
   const profilePicture = computed<string>(() =>
-    currentUser.value?.profilePicture.startsWith('https://')
-      ? currentUser.value.profilePicture
-      : `${import.meta.env.VITE_SERVER_URL}${currentUser.value?.profilePicture}`,
+    normalizeImageUrl(currentUser.value?.profilePicture),
   );
   const fetching = ref(false);
 
-  tryOnBeforeMount(fetchUser);
+  if (isFetchBeforeMount) fetchBeforeMount();
+
+  function fetchBeforeMount() {
+    return tryOnBeforeMount(fetchUser);
+  }
+
   function setUser(newUser: User | null) {
     currentUser.value = newUser;
   }
@@ -72,8 +75,8 @@ export const useUser = createGlobalState(() => {
 
   async function fetchUser() {
     fetching.value = true;
-    const fetchedUser = await getUserFromApi();
-    setUser(fetchedUser);
+    const { error, data } = await $useFetch('user/me').json<BasePayload<User>>();
+    setUser(error.value || !data.value?.ok ? null : data.value?.data);
     fetching.value = false;
     return currentUser.value;
   }
@@ -100,5 +103,6 @@ export const useUser = createGlobalState(() => {
     setTokens,
     clearTokens,
     fetchUser,
+    fetchBeforeMount,
   };
 });
