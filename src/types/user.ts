@@ -8,7 +8,6 @@ export interface UserSignUpData {
 
 export interface SignAuthPayload {
   accessToken: string;
-  refreshToken: string;
 }
 
 export interface User {

@@ -1,4 +1,5 @@
 import $useFetch from '@/composables/$useFetch';
+import { useAuthToken } from '@/composables/useAuthToken';
 import type { BasePayload, SignAuthPayload, SignInData, SignUpData, User } from '@/types';
 import { normalizeImageUrl } from '@/utils';
 import { tryOnBeforeMount } from '@vueuse/core';
@@ -6,6 +7,8 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
 export const useUserStore = defineStore('user', () => {
+  const { setAuthToken, clearAuthToken } = useAuthToken();
+
   const currentUser = ref<User | null>(null);
   const isAuth = computed<boolean>(() => !!currentUser.value?.email);
   const profilePicture = computed<string>(() =>
@@ -23,15 +26,15 @@ export const useUserStore = defineStore('user', () => {
 
   async function signIn(signInData: SignInData) {
     fetching.value = true;
-    const { data, error } = await $useFetch('auth/signin')
+    const { data, error } = await $useFetch('auth/signin', { credentials: 'include' }, {})
       .post(signInData)
       .json<BasePayload<SignAuthPayload>>();
     fetching.value = false;
     if (error.value || !data.value?.ok)
       throw new Error(error.value?.message || 'Some problem happened in signing in');
 
-    const { data: tokens } = data.value;
-    setTokens(tokens);
+    const { data: token } = data.value;
+    setAuthToken(token.accessToken);
 
     await fetchUser();
 
@@ -40,15 +43,15 @@ export const useUserStore = defineStore('user', () => {
 
   async function signUp(signUpData: SignUpData) {
     fetching.value = true;
-    const { data, error } = await $useFetch('auth/signup')
+    const { data, error } = await $useFetch('auth/signup', { credentials: 'include' }, {})
       .post(signUpData)
       .json<BasePayload<SignAuthPayload>>();
     fetching.value = false;
     if (error.value || !data.value?.ok)
       throw new Error(error.value?.message || 'Some problem happened in signing up');
 
-    const { data: tokens } = data.value;
-    setTokens(tokens);
+    const { data: token } = data.value;
+    setAuthToken(token.accessToken);
 
     await fetchUser();
 
@@ -56,14 +59,9 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function signout() {
-    await $useFetch('auth/signout')
-      .post({
-        refreshToken: localStorage.getItem('refreshToken') || '',
-      })
-      .json();
-
+    await $useFetch('auth/signout', { credentials: 'include' }, {}).json();
     setUser(null);
-    clearTokens();
+    clearAuthToken();
   }
 
   async function fetchUser() {
@@ -72,16 +70,6 @@ export const useUserStore = defineStore('user', () => {
     setUser(error.value || !data.value?.ok ? null : data.value?.data);
     fetching.value = false;
     return currentUser.value;
-  }
-
-  function setTokens({ accessToken, refreshToken }: SignAuthPayload) {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-  }
-
-  function clearTokens() {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
   }
 
   return {
@@ -93,8 +81,6 @@ export const useUserStore = defineStore('user', () => {
     signout,
     signIn,
     signUp,
-    setTokens,
-    clearTokens,
     fetchUser,
     fetchBeforeMount,
   };

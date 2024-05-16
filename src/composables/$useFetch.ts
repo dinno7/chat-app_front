@@ -1,5 +1,7 @@
 import { useUserStore } from '@/store/user';
 import { createFetch } from '@vueuse/core';
+import { useAuthToken } from './useAuthToken';
+import { useToast } from './useToast';
 
 let requestOptions: RequestInit = {};
 let isRefresh = false;
@@ -11,7 +13,7 @@ const $useFetch = createFetch({
     timeout: 10000,
     updateDataOnError: true,
     beforeFetch(ctx) {
-      const accessToken = localStorage.getItem('accessToken') || '';
+      const { accessToken } = useAuthToken();
       if (accessToken) {
         ctx.options.headers = {
           ...ctx.options.headers,
@@ -23,28 +25,22 @@ const $useFetch = createFetch({
       return ctx;
     },
     async onFetchError(ctx) {
-      const storeRefreshToken = localStorage.getItem('refreshToken') || '';
-      const storeAccessToken = localStorage.getItem('accessToken') || '';
       if (ctx.response?.status === 401 && !isRefresh) {
         isRefresh = true;
-        const { setTokens, signout } = useUserStore();
+        const { $toast } = useToast();
+        const { signout } = useUserStore();
+        const { setAuthToken } = useAuthToken();
 
         try {
           const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/auth/refresh`, {
             referrer: 'on_fetch_error_401',
-            method: 'POST',
-            body: JSON.stringify({
-              refreshToken: storeRefreshToken,
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${storeAccessToken}`,
-            },
+            method: 'GET',
+            credentials: 'include',
           });
           const newTokens = await res.json();
 
           if (newTokens?.ok) {
-            setTokens(newTokens.data);
+            setAuthToken(newTokens?.data?.accessToken);
 
             //> Refetch previous request:
             if (Object.keys(requestOptions).length) {
@@ -69,6 +65,10 @@ const $useFetch = createFetch({
           } else {
             ctx.data = null;
             ctx.error = newTokens;
+            $toast.error(
+              newTokens?.message || 'Your session has timed out\nplease login in again',
+              { timeout: 5000 },
+            );
             signout();
             return ctx;
           }
