@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import FormInput from '@/components/Form/Input.vue';
 import Icon from '@/components/Icon.vue';
 import Modal from '@/components/Modal.vue';
+import FindUsersModal from '@/components/Modals/FindUsersModal.vue';
+import UpdateUserModal from '@/components/Modals/UpdateUserModal.vue';
 import UserAvatar from '@/components/UserAvatar.vue';
+import { useUser } from '@/composables/useUser';
 import { ref } from 'vue';
-import FormWrapper from '../Form/FormWrapper.vue';
-import UpdateUserModal from '../Modals/UpdateUserModal.vue';
 
 const updateUserModal = ref<InstanceType<typeof Modal> | null>(null);
 const findUsersModal = ref<InstanceType<typeof Modal> | null>(null);
+const { signout } = useUser();
 </script>
 
 <template>
@@ -24,7 +25,7 @@ const findUsersModal = ref<InstanceType<typeof Modal> | null>(null);
     <div class="bottom-icons">
       <UserAvatar class="mx-auto mb-5 block cursor-pointer" @click="updateUserModal?.reveal" />
 
-      <div class="icon-wrapper" title="Exit">
+      <div class="icon-wrapper" title="Exit" @click="signout">
         <Icon name="i-eva:external-link-outline" size="28" />
       </div>
     </div>
@@ -32,13 +33,8 @@ const findUsersModal = ref<InstanceType<typeof Modal> | null>(null);
   <Modal ref="updateUserModal" #="{ cancel, confirm }">
     <UpdateUserModal :cancelFn="cancel" :confirmFn="confirm" />
   </Modal>
-  <Modal ref="findUsersModal" #="{ cancel, confirm }" position="top">
-    <div class="w-full flex flex-col gap-3 lg:w-8/12">
-      <FormWrapper class="w-full">
-        <FormInput />
-      </FormWrapper>
-      <FormWrapper class="w-full"> No any user found </FormWrapper>
-    </div>
+  <Modal ref="findUsersModal" position="top" #="{ confirm }">
+    <FindUsersModal :confirm="confirm" />
   </Modal>
 </template>
 
