@@ -32,7 +32,9 @@ const handleSearchUsers = useDebounceFn(
   async () => {
     await execute();
     if (!foundUsers.value?.ok && error.value)
-      return $toast.error(error.value?.message || 'Some error happened, try again');
+      return $toast.error(error.value?.message || 'Some error happened, try again', {
+        timeout: 5000,
+      });
   },
   500,
   { maxWait: 5000 },
