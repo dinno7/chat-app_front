@@ -7,7 +7,7 @@ body {
 }
 
 a {
-  --uno: 'text-blue-400 hover:brightness-[130%] underline underline-offset-auto underline-dotted';
+  --uno: 'text-blue-400 hover:brightness-[130%]';
 }
 
 button {
@@ -29,7 +29,11 @@ button {
 }
 
 .form-wrapper-width {
-  --uno: 'sm:max-w-full md:max-w-6/8 lg:max-w-5/8 xl:max-w-3/8 w-full';
+  --uno: 'md:max-w-6/8 lg:max-w-5/8 xl:max-w-3/8 w-full';
+}
+
+.modal-content-width {
+  --uno: 'w-90vw lg:w-40vw md:w-70vw';
 }
 
 *::-webkit-scrollbar {
