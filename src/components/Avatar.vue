@@ -5,12 +5,14 @@ const props = withDefaults(
     src: string;
     alt: string;
     title?: string;
+    status?: 'online' | 'offline' | null;
   }>(),
   {
     size: 'sm',
     src: '',
     alt: '',
     title: '',
+    status: null,
   },
 );
 
@@ -22,12 +24,21 @@ const avatarSize = {
 </script>
 
 <template>
-  <div
-    v-if="props.src"
-    class="overflow-hidden rounded-50% bg-brand-base ring-2 ring-brand-action/30"
-    :class="[avatarSize[props.size]]"
-    :title="props.title"
-  >
-    <img :src="props.src" :alt="props.alt" class="size-full object-cover object-c" />
+  <div v-if="props.src" class="relative size-max">
+    <div
+      class="overflow-hidden rounded-50% bg-brand-base ring-2 ring-brand-action/30"
+      :class="[avatarSize[props.size]]"
+      :title="props.title"
+    >
+      <img :src="props.src" :alt="props.alt" class="size-full object-cover object-c" />
+    </div>
+    <span
+      v-if="props.status"
+      class="absolute size-2.5 rounded-50% -bottom-0.5 -right-0.5"
+      :class="{
+        'bg-green': props.status === 'online',
+        'bg-gray': props.status === 'offline',
+      }"
+    ></span>
   </div>
 </template>
