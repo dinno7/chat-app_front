@@ -10,12 +10,20 @@
 <script setup lang="ts">
 import Logo from '@/components/Logo.vue';
 import SideBar from '@/components/SideBar/Index.vue';
+import { useSocketConnectionStore } from '@/store/socket/connection';
+import { tryOnUnmounted } from '@vueuse/core';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const isUserMessagePage = computed(() => (route.name as string)?.toLowerCase() === 'user_messages');
+
+const socketStore = useSocketConnectionStore();
+socketStore.bindEvents();
+socketStore.connect();
+tryOnUnmounted(socketStore.disconnect);
 </script>
+
 <template>
   <div class="grid h-screen max-h-screen gap-5 lg:grid-cols-[3fr_9fr]">
     <section :class="[isUserMessagePage && '<lg:hidden']">
