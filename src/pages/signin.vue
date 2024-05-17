@@ -1,6 +1,9 @@
 <route lang="json5">
 {
   name: 'signin',
+  meta: {
+    justNotAuthUsers: true,
+  },
 }
 </route>
 <script setup>
