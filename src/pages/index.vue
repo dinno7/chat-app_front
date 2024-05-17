@@ -11,6 +11,7 @@
 import Logo from '@/components/Logo.vue';
 import SideBar from '@/components/SideBar/Index.vue';
 import { useSocketConnectionStore } from '@/store/socket/connection';
+import { useMessengerStore } from '@/store/socket/messenger';
 import { tryOnUnmounted } from '@vueuse/core';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
@@ -22,6 +23,9 @@ const socketStore = useSocketConnectionStore();
 socketStore.bindEvents();
 socketStore.connect();
 tryOnUnmounted(socketStore.disconnect);
+
+const messengerStore = useMessengerStore();
+messengerStore.bindEvents();
 </script>
 
 <template>

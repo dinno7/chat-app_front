@@ -2,10 +2,11 @@
 import FormInput from '@/components/Form/Input.vue';
 import $useFetch from '@/composables/$useFetch';
 import { useToast } from '@/composables/useToast';
+import { useMessengerStore } from '@/store/socket/messenger';
 import type { BasePayload, User } from '@/types';
 import { normalizeImageUrl } from '@/utils';
 import { useDebounceFn } from '@vueuse/core';
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import Avatar from '../Avatar.vue';
 import FormWrapper from '../Form/FormWrapper.vue';
 import Icon from '../Icon.vue';
@@ -18,6 +19,8 @@ const props = defineProps<IProps>();
 
 const { $toast } = useToast();
 const searchQueryInput = ref<string>('');
+
+const messengerStore = useMessengerStore();
 
 const {
   data: foundUsers,
@@ -73,7 +76,11 @@ const handleSearchUsers = useDebounceFn(
             @click="props.confirm"
             class="w-full flex items-center gap-3 rounded bg-brand-primary/5 px-3 py-4 transition-colors transition-transform hover:(scale-105 bg-brand-primary/15)"
           >
-            <Avatar :src="normalizeImageUrl(user.profilePicture)" :alt="user.name" />
+            <Avatar
+              :src="normalizeImageUrl(user.profilePicture)"
+              :alt="user.name"
+              :status="messengerStore.onlineUsers.includes(user.id) ? 'online' : 'offline'"
+            />
             <span class="text-brand-primary font-medium"> {{ user.name }}</span>
             <Icon name="i-eva:message-circle-outline" class="ml-auto" color="text-brand-action" />
           </RouterLink>
