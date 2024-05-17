@@ -6,13 +6,15 @@
   },
 }
 </route>
-<script setup>
+<script setup lang="ts">
 import Button from '@/components/Button.vue';
 import FormWrapper from '@/components/Form/FormWrapper.vue';
 import FormInput from '@/components/Form/Input.vue';
 import FullPageCenterWrapper from '@/components/FullPageCenterWrapper.vue';
+import $useFetch from '@/composables/$useFetch';
+import { useAuthToken } from '@/composables/useAuthToken';
 import { useToast } from '@/composables/useToast';
-import { useUserStore } from '@/store/user';
+import type { BasePayload, SignAuthPayload } from '@/types';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -23,26 +25,27 @@ const signInData = reactive({
   password: '',
 });
 const sendingData = ref(false);
-
-const { signIn } = useUserStore();
+const { setAuthToken } = useAuthToken();
 
 const submitToSignIn = async () => {
-  try {
-    sendingData.value = true;
-    await signIn(signInData);
-    sendingData.value = false;
-    $toast.success('You were login successfully', {
-      title: 'Login successful',
-      timeout: 5000,
-    });
+  sendingData.value = true;
+  const { data, error } = await $useFetch('auth/signin', { credentials: 'include' }, {})
+    .post(signInData)
+    .json<BasePayload<SignAuthPayload>>();
 
-    return router.push({ force: true, replace: true, name: 'home' });
-  } catch (error) {
-    $toast.error(error.message, {
-      title: 'Login failed',
-      timeout: 5000,
-    });
-  }
+  if (error.value || !data.value?.ok)
+    throw new Error(error.value?.message || 'Some problem happened in signing in');
+
+  const { data: token } = data.value;
+  setAuthToken(token.accessToken);
+
+  $toast.success('You were login successfully', {
+    title: 'Login successful',
+    timeout: 5000,
+  });
+  sendingData.value = false;
+
+  return router.push({ force: true, replace: true, name: 'home' });
 };
 </script>
 

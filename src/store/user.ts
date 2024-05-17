@@ -1,13 +1,15 @@
 import $useFetch from '@/composables/$useFetch';
 import { useAuthToken } from '@/composables/useAuthToken';
-import type { BasePayload, SignAuthPayload, SignInData, SignUpData, User } from '@/types';
+import type { BasePayload, User } from '@/types';
 import { normalizeImageUrl } from '@/utils';
 import { tryOnBeforeMount } from '@vueuse/core';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
+import { useSocketConnectionStore } from './socket/connection';
 
 export const useUserStore = defineStore('user', () => {
-  const { setAuthToken, clearAuthToken } = useAuthToken();
+  const { clearAuthToken } = useAuthToken();
+  const socketConnectionStore = useSocketConnectionStore();
 
   const currentUser = ref<User | null>(null);
   const isAuth = computed<boolean>(() => !!currentUser.value?.email);
@@ -24,42 +26,9 @@ export const useUserStore = defineStore('user', () => {
     currentUser.value = newUser;
   }
 
-  async function signIn(signInData: SignInData) {
-    fetching.value = true;
-    const { data, error } = await $useFetch('auth/signin', { credentials: 'include' }, {})
-      .post(signInData)
-      .json<BasePayload<SignAuthPayload>>();
-    fetching.value = false;
-    if (error.value || !data.value?.ok)
-      throw new Error(error.value?.message || 'Some problem happened in signing in');
-
-    const { data: token } = data.value;
-    setAuthToken(token.accessToken);
-
-    await fetchUser();
-
-    return currentUser;
-  }
-
-  async function signUp(signUpData: SignUpData) {
-    fetching.value = true;
-    const { data, error } = await $useFetch('auth/signup', { credentials: 'include' }, {})
-      .post(signUpData)
-      .json<BasePayload<SignAuthPayload>>();
-    fetching.value = false;
-    if (error.value || !data.value?.ok)
-      throw new Error(error.value?.message || 'Some problem happened in signing up');
-
-    const { data: token } = data.value;
-    setAuthToken(token.accessToken);
-
-    await fetchUser();
-
-    return currentUser;
-  }
-
   async function signout() {
     await $useFetch('auth/signout', { credentials: 'include' }, {}).json();
+    socketConnectionStore.disconnect();
     setUser(null);
     clearAuthToken();
   }
@@ -79,8 +48,6 @@ export const useUserStore = defineStore('user', () => {
     isFetching: fetching,
     setUser,
     signout,
-    signIn,
-    signUp,
     fetchUser,
     fetchBeforeMount,
   };
