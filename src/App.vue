@@ -4,8 +4,9 @@ import { whenever } from '@vueuse/core';
 import { useRouter } from 'vue-router';
 import { useUserStore } from './store/user';
 
-const userStore = useUserStore();
 const router = useRouter();
+const userStore = useUserStore();
+
 whenever(
   () => !userStore.isAuth,
   () => router.push({ name: 'signin', force: true, replace: true }),

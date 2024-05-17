@@ -13,7 +13,9 @@ const $useFetch = createFetch({
     timeout: 10000,
     updateDataOnError: true,
     beforeFetch(ctx) {
-      const { accessToken } = useAuthToken();
+      const token = useAuthToken();
+      const accessToken = token.accessToken.value;
+
       if (accessToken) {
         ctx.options.headers = {
           ...ctx.options.headers,
@@ -81,6 +83,9 @@ const $useFetch = createFetch({
         }
       }
       isRefresh = false;
+
+      ctx.error = ctx.data;
+      ctx.data = null;
       return ctx;
     },
   },

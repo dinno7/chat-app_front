@@ -9,7 +9,8 @@ router.beforeEach(async (to, from, next) => {
   //? Check authorization for auth pages
   if (to.meta?.auth) {
     const notAuthRoute = { name: 'signin', replace: true, force: true };
-    const { accessToken } = useAuthToken();
+    const token = useAuthToken();
+    const accessToken = token.accessToken.value;
     if (!accessToken) return next(notAuthRoute);
 
     const userStore = useUserStore();
@@ -20,6 +21,10 @@ router.beforeEach(async (to, from, next) => {
   }
   //? Check if user authorized do not let it see sign(in/up) pages
   if (to.meta?.justNotAuthUsers) {
+    const token = useAuthToken();
+    const accessToken = token.accessToken.value;
+    if (!accessToken) return next();
+
     const userStore = useUserStore();
     const user = userStore.currentUser ? userStore.currentUser : await userStore.fetchUser();
     if (user) return next({ name: 'home', replace: true, force: true });

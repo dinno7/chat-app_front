@@ -7,7 +7,7 @@ export const useAuthToken = () => {
   const setAuthToken = (token: string) => (authToken.value = token);
   const clearAuthToken = () => (authToken.value = null);
   return {
-    accessToken: authToken.value,
+    accessToken: authToken,
     setAuthToken,
     clearAuthToken,
   };
