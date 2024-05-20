@@ -29,11 +29,11 @@ messengerStore.bindEvents();
 </script>
 
 <template>
-  <div class="grid h-screen max-h-screen gap-5 lg:grid-cols-[3fr_9fr]">
+  <div class="grid h-screen max-h-screen lg:grid-cols-[450px_1fr]">
     <section :class="[isUserMessagePage && '<lg:hidden']">
       <SideBar />
     </section>
-    <section :class="[!isUserMessagePage && '<lg:hidden']">
+    <section class="bg-pattern" :class="[!isUserMessagePage && '<lg:hidden']">
       <!-- > Refers to src/pages/index/[user_id].vue -->
       <RouterView />
       <div v-if="!isUserMessagePage" class="size-full flex items-center justify-center">
