@@ -33,12 +33,8 @@ const avatarSize = {
       <img :src="props.src" :alt="props.alt" class="size-full object-cover object-c" />
     </div>
     <span
-      v-if="props.status"
-      class="absolute size-2.5 rounded-50% -bottom-0.5 -right-0.5"
-      :class="{
-        'bg-green': props.status === 'online',
-        'bg-gray': props.status === 'offline',
-      }"
+      v-if="props.status === 'online'"
+      class="absolute size-2.5 rounded-50% bg-green -bottom-0.5 -right-0.5"
     ></span>
   </div>
 </template>
