@@ -6,7 +6,7 @@ interface IProps {
 }
 const props = withDefaults(defineProps<IProps>(), {
   size: 25,
-  color: 'text-blue-500',
+  color: 'text-brand-primary',
 });
 </script>
 
