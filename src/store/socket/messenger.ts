@@ -1,5 +1,5 @@
 import { socket } from '@/socket';
-import type { Conversation, Message, User } from '@/types';
+import type { ConversationList, Message, User } from '@/types';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
@@ -7,10 +7,13 @@ export const useMessengerStore = defineStore('messenger', () => {
   const messages = ref<Message[]>([]);
   const receiverUser = ref<User | null>(null);
   const onlineUsers = ref<string[]>([]);
-  const conversations = ref<Conversation[]>([]);
+  const conversations = ref<ConversationList[]>([]);
 
-  function clearOnlineUsers() {
+  function clearAllStates() {
     onlineUsers.value = [];
+    messages.value = [];
+    receiverUser.value = null;
+    conversations.value = [];
   }
 
   const sendMessage = (text: string, imageUrl = null, videoUrl = null) => ({
@@ -23,9 +26,15 @@ export const useMessengerStore = defineStore('messenger', () => {
       }),
   });
 
+  function getConversations() {
+    socket.emit('getChatConversations');
+  }
   function bindEvents() {
-    socket.on('message', (data) => {
-      messages.value = data;
+    socket.on('message', (msgs: Message[]) => {
+      messages.value = msgs;
+
+      const lastMsg = msgs[msgs.length - 1];
+      if (receiverUser.value?.id === lastMsg.sender) socket.emit('seen', receiverUser.value.id);
     });
     socket.on('consumeReceiverUserDetails', (data) => {
       receiverUser.value = data;
@@ -44,7 +53,8 @@ export const useMessengerStore = defineStore('messenger', () => {
     messages,
     receiverUser,
     conversations,
-    clearOnlineUsers,
+    clearAllStates,
+    getConversations,
     sendMessage,
     bindEvents,
   };
