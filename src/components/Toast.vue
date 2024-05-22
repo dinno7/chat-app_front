@@ -20,7 +20,7 @@ const toastsOptions = computed(() => {
     switch (t.type) {
       case TOAST_TYPES.Success:
         option = {
-          colorClasses: 'bg-emerald-900/10 border-emerald-500/50',
+          colorClasses: 'bg-emerald-900/45 border-emerald-500/50',
           icon: 'i-eva:checkmark-circle-2-outline',
           iconColorClasses: 'text-emerald-400',
           animateClass: 'animate-tada',
@@ -28,7 +28,7 @@ const toastsOptions = computed(() => {
         break;
       case TOAST_TYPES.Error:
         option = {
-          colorClasses: 'bg-rose-900/10 border-rose-500/50',
+          colorClasses: 'bg-rose-900/45 border-rose-500/50',
           icon: 'i-eva:alert-triangle-outline',
           iconColorClasses: 'text-rose-400',
           animateClass: 'animate-head-shake',
@@ -37,7 +37,7 @@ const toastsOptions = computed(() => {
 
       default:
         option = {
-          colorClasses: 'bg-sky-900/10 border-sky-500/50',
+          colorClasses: 'bg-sky-900/45 border-sky-500/50',
           icon: 'i-eva:question-mark-outline',
           iconColorClasses: 'text-sky-400',
           animateClass: 'animate-fade-in-down animate-duration-200',
@@ -82,7 +82,7 @@ const toastsOptions = computed(() => {
           >
             <div
               :class="[toastsOptions[toast.id].colorClasses]"
-              class="toast-card pointer-events-auto max-w-sm w-80 overflow-hidden border-2 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 backdrop-blur transition-duration-300 transition-ease transition-property-[backdrop-filter] hover:(backdrop-blur-xl)"
+              class="toast-card pointer-events-auto max-w-sm w-80 overflow-hidden border-2 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 backdrop-blur-lg transition-duration-300 transition-ease transition-property-[backdrop-filter] hover:(backdrop-blur-xl)"
             >
               <div class="p-4">
                 <div class="flex gap-3">
