@@ -1,26 +1,39 @@
 <script setup lang="ts">
+import { useMessengerStore } from '@/store/socket/messenger';
+import { useRoute } from 'vue-router';
 import Icon from '../Icon.vue';
+
+const route = useRoute();
+const { sendMessage } = useMessengerStore();
+
+const handleSendMessage = async (e: Event) => {
+  const form = new FormData(e.target as HTMLFormElement);
+  const data = Object.fromEntries(form) as { message: string };
+  if (!data?.message) return;
+
+  sendMessage(data.message).to((route.params.user_id as string) || '');
+
+  (e.target as HTMLFormElement).reset();
+};
 </script>
 
 <template>
-  <div class="h-14 min-h-12 flex items-center justify-center gap-3 rounded-lg">
+  <form
+    @submit.prevent="handleSendMessage"
+    class="size-full flex items-center justify-center gap-3"
+  >
     <input
       name="message"
       id="message"
       dir="auto"
-      class="h-full w-4/12 resize-none rounded-lg bg-brand-primary/10 px-3 py-1 backdrop-blur focus:(outline-none)"
+      placeholder="Type your message"
+      class="h-full w-6/12 resize-none rounded-lg bg-brand-primary/10 px-3 py-1 backdrop-blur focus:(outline-none)"
     />
-    <div
-      class="group flex cursor-pointer items-center justify-center rounded-lg bg-brand-primary/10 p-3"
+    <button
+      type="submit"
+      class="flex cursor-pointer items-center justify-center rounded-lg bg-brand-action p-3 hover:bg-brand-action-400"
     >
-      <Icon
-        name="i-eva:navigation-2-outline"
-        color="text-brand-primary/70"
-        size="28"
-        class="group-hover:text-brand-action"
-      />
-    </div>
-  </div>
+      <Icon name="i-eva:navigation-2-outline" color="text-brand-primary" size="28" />
+    </button>
+  </form>
 </template>
-
-<style scoped></style>
