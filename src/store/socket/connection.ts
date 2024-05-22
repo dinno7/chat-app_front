@@ -6,7 +6,7 @@ import { useMessengerStore } from './messenger';
 
 export const useSocketConnectionStore = defineStore('socket_connection', () => {
   const isConnected = ref(false);
-  const { clearOnlineUsers } = useMessengerStore();
+  const { clearAllStates } = useMessengerStore();
   const { accessToken } = useAuthToken();
 
   function bindEvents() {
@@ -26,7 +26,7 @@ export const useSocketConnectionStore = defineStore('socket_connection', () => {
 
   function disconnect() {
     socket.disconnect();
-    clearOnlineUsers();
+    clearAllStates();
   }
 
   return {
